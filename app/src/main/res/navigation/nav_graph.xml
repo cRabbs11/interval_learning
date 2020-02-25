@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentLaunch">
+    <fragment
+        android:id="@+id/fragmentLaunch"
+        android:name="com.ekochkov.intervallearning.LaunchFragment"
+        android:label="StartFragment"
+        tools:layout="@layout/fragment_launch">
+        <argument
+            android:name="country"
+            app:argType="string"
+            android:defaultValue="Россия (с 1997г.)" />
+        <action
+            android:id="@+id/action_fragmentLaunch_to_fragmentIntervalList"
+            app:destination="@id/fragmentIntervalList" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentIntervalList"
+        android:name="com.ekochkov.intervallearning.IntervalListFragment"
+        android:label="IntervalListFragment"
+        tools:layout="@layout/fragment_interval_list">
+        <action
+            android:id="@+id/action_fragmentIntervalList_to_fragmentAddWord"
+            app:destination="@id/fragmentAddWord" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentAddWord"
+        android:name="com.ekochkov.intervallearning.AddWordFragment"
+        android:label="FragmentItemsList"
+        tools:layout="@layout/fragment_add_word">
+        <action
+            android:id="@+id/action_fragmentAddWord_to_fragmentIntervalList"
+            app:destination="@id/fragmentIntervalList" />
+    </fragment>
+    
+</navigation>
