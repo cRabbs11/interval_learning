@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Interval Learning</string>
+    <string name="app_name">Интервальное повторение</string>
+	<string name="string_category_name">название категории</string>
+	<string name="string_word_original">слово</string>
+	<string name="string_word_translate">перевод</string>
+	<string name="start_activity_mode">repeat</string>
 </resources>

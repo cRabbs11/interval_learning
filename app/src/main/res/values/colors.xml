@@ -3,4 +3,15 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="colorLightGreen">#39DB39</color>
+    <color name="colorGreen">#2DAA2D</color>
+    <color name="colorDarkGreen">#227922</color>
+
+    <color name="colorLightRed">#FA5757</color>
+    <color name="colorRed">#FF1B1B</color>
+    <color name="colorDarkRed">#CC1616</color>
+
+    <color name="colorDone">@color/colorGreen</color>
+    <color name="colorUndone">#FF1B1B</color>
 </resources>

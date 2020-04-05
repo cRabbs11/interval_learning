@@ -3,37 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentLaunch">
+    app:startDestination="@id/fragmentMainMenu">
     <fragment
-        android:id="@+id/fragmentLaunch"
-        android:name="com.ekochkov.intervallearning.LaunchFragment"
-        android:label="StartFragment"
-        tools:layout="@layout/fragment_launch">
-        <argument
-            android:name="country"
-            app:argType="string"
-            android:defaultValue="Россия (с 1997г.)" />
+        android:id="@+id/fragmentMainMenu"
+        android:name="com.ekochkov.intervallearning.mainMenu.MainMenuFragment"
+        android:label="MainMenuFragment"
+        tools:layout="@layout/fragment_main_menu">
         <action
-            android:id="@+id/action_fragmentLaunch_to_fragmentIntervalList"
-            app:destination="@id/fragmentIntervalList" />
+            android:id="@+id/action_fragmentMainMenu_to_fragmentAddCategory"
+            app:destination="@id/fragmentAddCategory" />
+
+        <action
+            android:id="@+id/action_fragmentMainMenu_to_fragmentRepeat"
+            app:destination="@id/fragmentRepeat" />
+
     </fragment>
+	<fragment
+        android:id="@+id/fragmentAddCategory"
+        android:name="com.ekochkov.intervallearning.category.CategoryFragment"
+        android:label="AddCategoryFragment"
+        tools:layout="@layout/fragment_add_category">
+        <action
+            android:id="@+id/action_fragmentAddCategory_to_fragmentMainMenu"
+            app:destination="@id/fragmentMainMenu" />
+    </fragment>
+
     <fragment
-        android:id="@+id/fragmentIntervalList"
-        android:name="com.ekochkov.intervallearning.IntervalListFragment"
-        android:label="IntervalListFragment"
-        tools:layout="@layout/fragment_interval_list">
-        <action
-            android:id="@+id/action_fragmentIntervalList_to_fragmentAddWord"
-            app:destination="@id/fragmentAddWord" />
-    </fragment>
-    <fragment
-        android:id="@+id/fragmentAddWord"
-        android:name="com.ekochkov.intervallearning.AddWordFragment"
-        android:label="FragmentItemsList"
-        tools:layout="@layout/fragment_add_word">
-        <action
-            android:id="@+id/action_fragmentAddWord_to_fragmentIntervalList"
-            app:destination="@id/fragmentIntervalList" />
-    </fragment>
-    
+        android:id="@+id/fragmentRepeat"
+        android:name="com.ekochkov.intervallearning.repeat.RepeatFragment"
+        android:label="RepeatFragment"
+        tools:layout="@layout/fragment_repeat"/>
 </navigation>
