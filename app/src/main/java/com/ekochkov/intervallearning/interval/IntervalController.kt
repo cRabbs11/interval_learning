@@ -14,10 +14,10 @@ import androidx.lifecycle.MutableLiveData
 
 
 
-class IntervalController private constructor(activity: Activity) : IntervalCallback<Int> {
+class IntervalController private constructor(context: Context) : IntervalCallback<Int> {
 
-    companion object : SingletonHolder<IntervalController, Activity>(::IntervalController)
-    lateinit var activity: Activity
+    companion object : SingletonHolder<IntervalController, Context>(::IntervalController)
+    lateinit var context: Context
 
     override fun getBound(): Boolean {
         return appStatus.value?: false
@@ -49,15 +49,20 @@ class IntervalController private constructor(activity: Activity) : IntervalCallb
     }
 
     init {
-        this.activity=activity
+        this.context=context
     }
 
     fun startService(callback: SimpleCallback<String>) {
         this.callback=callback
-        var intent = Intent(activity, IntervalService::class.java)
-        activity.startService(intent)
-        activity.bindService(intent, intervalServiceConn, Context.BIND_AUTO_CREATE)
+        var intent = Intent(context, IntervalService::class.java)
+        context.startService(intent)
+        context.bindService(intent, intervalServiceConn, Context.BIND_AUTO_CREATE)
     }
+
+    fun unbindService() {
+        context.unbindService(intervalServiceConn)
+    }
+
 
     fun getAppStatus(): LiveData<Boolean> {
         return appStatus

@@ -11,7 +11,8 @@ public interface RepeatContract {
         fun showToast(toast: String)
         fun showButtons()
         fun hideButtons()
-        fun showFinish()
+        fun showFinish(message: String)
+        fun closeFragment()
     }
 
     interface Presenter: MvpPresenter<View> {

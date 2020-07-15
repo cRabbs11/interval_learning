@@ -7,10 +7,10 @@ import com.ekochkov.intervallearning.interval.IntervalController
 import com.ekochkov.intervallearning.mvp.PresenterBase
 import com.ekochkov.intervallearning.room.RoomController
 import com.ekochkov.intervallearning.room.Word
-import com.ekochkov.intervallearning.utils.SimpleCallback
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.ekochkov.intervallearning.room.Category
+import com.ekochkov.intervallearning.utils.SimpleCallback
 
 
 public class MainMenuPresenter(lifecycleOwner: LifecycleOwner, roomController: RoomController, intervalController: IntervalController):
@@ -64,7 +64,7 @@ public class MainMenuPresenter(lifecycleOwner: LifecycleOwner, roomController: R
                     override fun onSuccess(item: ArrayList<Word>) {
                         Log.d(LOG_TAG, "repeatWordList.size: ${item.size}")
                         if (item.size!=0) {
-                            getView()?.showRepeatLayout("повторить слова")
+                            getView()?.showRepeatLayout(" повторить ${item.size} слов")
                         } else {
                             getView()?.hideRepeatLayout()
                         }
@@ -106,6 +106,27 @@ public class MainMenuPresenter(lifecycleOwner: LifecycleOwner, roomController: R
 		//		getView()?.showCategoryList(words)
         //    }
         //})
+    }
+
+    //создает default имя для новой категории
+    fun createCategoryName(callback: SimpleCallback<String>) {
+        roomController.getAllCategories(object: RoomController.RoomAsyncCallback<ArrayList<Word>> {
+            override fun onSuccess(words: ArrayList<Word>) {
+                var category = "категория 1"
+                for(i in 1..words.size) {
+                    words.forEach {
+                        if (it.category.equals("категория $i")) {
+                            category = "категория ${i+1}"
+                        }
+                    }
+                }
+                callback.onResult(category)
+            }
+
+            override fun onComplete() {
+
+            }
+        })
     }
 
 }

@@ -46,21 +46,22 @@ class IntervalService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
+        Log.d(LOG_TAG, "onBind()")
         someTask()
         return super.onStartCommand(intent, flags, startId)
     }
 
     fun someTask() {
+        Log.d(LOG_TAG, "someTask()")
         Thread(Runnable {
             while (true) {
                 try {
                     checkWords(applicationContext)
                     //повтор каждые 2 часа
-                    TimeUnit.HOURS.sleep(6)
+                    TimeUnit.HOURS.sleep(1)
                     //TimeUnit.MINUTES.sleep(2)
                     //TimeUnit.SECONDS.sleep(5)
-                    Log.d(LOG_TAG, "TimeUnit.HOURS.sleep(6)")
+                    Log.d(LOG_TAG, "TimeUnit.HOURS.sleep(1)")
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
@@ -83,7 +84,8 @@ class IntervalService: Service() {
                     }
                 }
             }
-
+            override fun onComplete() {
+            }
         })
     }
 

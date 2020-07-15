@@ -24,6 +24,9 @@ public interface CategoryContract {
 		fun onListItemClicked(word: Word)
         fun onFloatingBtnClicked()
         fun onSaveWordClicked()
-        fun onDeleteWordClicked()
+        fun onDeleteWordClicked(word: Word)
+        fun onChangeWordClicked(word: Word)
+        fun onShowAddDialogClicked()
+        fun onAddWordClicked(bundle: Bundle)
     }
 }

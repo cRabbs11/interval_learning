@@ -11,11 +11,23 @@
         tools:layout="@layout/fragment_main_menu">
         <action
             android:id="@+id/action_fragmentMainMenu_to_fragmentAddCategory"
-            app:destination="@id/fragmentAddCategory" />
+            app:destination="@id/fragmentAddCategory"
+
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_top"
+
+            app:popEnterAnim="@anim/slide_in_top"
+            app:popExitAnim="@anim/slide_out_bottom"/>
 
         <action
             android:id="@+id/action_fragmentMainMenu_to_fragmentRepeat"
-            app:destination="@id/fragmentRepeat" />
+            app:destination="@id/fragmentRepeat"
+
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_top"
+
+            app:popEnterAnim="@anim/slide_in_top"
+            app:popExitAnim="@anim/slide_out_bottom"/>
 
     </fragment>
 	<fragment

@@ -9,12 +9,32 @@
         android:id="@+id/recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingBottom="88dp"
+        android:clipToPadding="false"
 
-        app:layout_constraintBottom_toTopOf="@id/notification_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintVertical_weight="8"/>
+
+    <LinearLayout
+        android:id="@+id/empty_recycler_message_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:text="добавьте свою первую категорию"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -27,25 +47,18 @@
         app:layout_constraintRight_toRightOf="parent"
         android:src="@drawable/ic_add_white_24dp" />
 
-    <LinearLayout
-        android:id="@+id/notification_layout"
-        android:orientation="horizontal"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-
-        app:layout_constraintTop_toBottomOf="@id/recycler_view"
+    <Button
+        android:id="@+id/notification_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="54dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintVertical_weight="1">
-
-        <TextView
-            android:id="@+id/notification_info"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="уведомление" />
-
-    </LinearLayout>
+        android:background="@drawable/repeat_button_selector"
+        android:drawableLeft="@drawable/ic_replay_white_24dp"
+        android:textColor="@color/colorWhite"
+        android:text="повторить 6 слов"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

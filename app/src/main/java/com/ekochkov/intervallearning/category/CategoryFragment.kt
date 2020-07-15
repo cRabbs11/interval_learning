@@ -11,24 +11,55 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ekochkov.intervallearning.R
 import com.ekochkov.intervallearning.room.RoomController
 import com.ekochkov.intervallearning.room.Word
-import com.ekochkov.intervallearning.utils.OnItemClickListener
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.ekochkov.intervallearning.WordListAdapter
+import com.ekochkov.intervallearning.category.addWord.AddWordFragment
+import com.ekochkov.intervallearning.utils.OnWordItemClickListener
+import com.ekochkov.intervallearning.utils.QuestionDialogFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class CategoryFragment : Fragment(), OnItemClickListener<Word>, CategoryContract.View {
+class CategoryFragment : Fragment(), OnWordItemClickListener<Word>, AddWordFragment.AddWordDialogListener, CategoryContract.View {
+    override fun onDialogPositiveClick(bundle: Bundle) {
+        //Log.d(LOG_TAG, "onDialogPositiveClick: ${value} ")
+        presenter.onAddWordClicked(bundle)
+    }
+
+    override fun onDialogNegativeClick() {
+
+    }
+
+    override fun onDeleteClick(item: Word) {
+        var deleteQuestionDialog = QuestionDialogFragment(
+            "вы хотите удалить слово ${item.original}?",
+            "да",
+            "нет",
+            object: QuestionDialogFragment.QuestionDialogListener {
+                override fun onPositiveClick() {
+                    presenter.onDeleteWordClicked(item)
+                }
+                override fun onNegativeClick() {
+                }
+            })
+
+        deleteQuestionDialog.show(getFragmentManager()!!, "delete_word_dialog")
+    }
+
+    override fun onChangeClick(item: Word) {
+        var bundle = Bundle()
+        bundle.putString("categoryName", item.category)
+        bundle.putString("wordOriginal", item.original)
+        bundle.putString("wordTranslate", item.translate)
+        openAddWordFragment(bundle)
+    }
 
     override fun showWordData(word: Word) {
-        wordOriginal.setText(word.original)
-        wordTranslate.setText(word.translate)
-        categoryName.setText(word.category)
-        wordOriginal.clearFocus()
-        wordTranslate.clearFocus()
-        categoryName.clearFocus()
+
     }
 
     override fun showToast(message: String) {
@@ -36,21 +67,23 @@ class CategoryFragment : Fragment(), OnItemClickListener<Word>, CategoryContract
     }
 
     override fun clearEditText() {
-        wordOriginal.setText("")
-        wordTranslate.setText("")
-        wordOriginal.clearFocus()
-        wordTranslate.clearFocus()
-        categoryName.clearFocus()
+
     }
 
     override fun showCategoryName(category: String?) {
-		categoryName.setText(category)
+
 	}
 	
 	override fun showWordList(list: ArrayList<Word> ) {
 		Log.d(LOG_TAG, "words count: ${list.size} ")
         adapter.clearItems()
         adapter.setItems(list)
+
+        if (list.isEmpty()) {
+            emptyRecyclerMessageLayout.visibility= View.VISIBLE
+        } else {
+            emptyRecyclerMessageLayout.visibility= View.GONE
+        }
 	}
 	
 	override fun updateWordList(words: ArrayList<Word> ) {
@@ -65,18 +98,13 @@ class CategoryFragment : Fragment(), OnItemClickListener<Word>, CategoryContract
 	
 	}
 
-    override fun onItemClick(word: Word) {
-        presenter.onListItemClicked(word)
-    }
-
     val LOG_TAG = CategoryFragment::class.java.name + " BMTH "
 
-	lateinit var categoryName: EditText
-	lateinit var wordOriginal: EditText
-	lateinit var wordTranslate: EditText
     lateinit var recyclerView: RecyclerView
+    lateinit var floatingBtn: FloatingActionButton
     lateinit var presenter: CategoryPresenter
     lateinit var adapter: WordListAdapter
+    lateinit var emptyRecyclerMessageLayout: LinearLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_add_category, container, false)
@@ -84,32 +112,20 @@ class CategoryFragment : Fragment(), OnItemClickListener<Word>, CategoryContract
         return rootView
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.category_fragment_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean{
-        when(item.getItemId()) {
-            R.id.save_word-> { presenter.onSaveWordClicked() }
-            R.id.delete_word-> { presenter.onDeleteWordClicked() }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     fun initView(rootView: View ) {
         recyclerView = rootView.findViewById(R.id.recycler_view)
         var linearLayoutManager = LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         recyclerView!!.setLayoutManager(linearLayoutManager)
-		
-		categoryName = rootView.findViewById(R.id.category_name)
-		wordOriginal = rootView.findViewById(R.id.word_original)
-		wordTranslate = rootView.findViewById(R.id.word_translate)
+        emptyRecyclerMessageLayout = rootView.findViewById(R.id.empty_recycler_message_layout)
+
+        floatingBtn = rootView.findViewById(R.id.floating_btn)
+        floatingBtn.setOnClickListener {
+            //dialogPresenter.onShowAddDialogClicked()
+            var bundle = Bundle()
+            var category = arguments!!.getString("categoryName")
+            bundle.putString("categoryName", category)
+            openAddWordFragment(bundle)
+        }
 
         Log.d(LOG_TAG, " запустили")
         adapter = WordListAdapter(this)
@@ -134,10 +150,17 @@ class CategoryFragment : Fragment(), OnItemClickListener<Word>, CategoryContract
 	override fun getWordData(): Bundle? {
         Log.d(LOG_TAG, "getBundle")
         var bundle = Bundle()
-        bundle.putString("wordOriginal", wordOriginal.text.toString())
-        bundle.putString("wordTranslate", wordTranslate.text.toString())
-		bundle.putString("categoryName", categoryName.text.toString())
+
         bundle.putInt("status", arguments?.getInt("status")?:1)
         return bundle
+    }
+
+    private fun openAddWordFragment(bundle: Bundle) {
+        var addWordFragment = AddWordFragment(this)
+        addWordFragment.arguments = bundle
+
+        var fragmentManager = getFragmentManager()
+        var fragmentTransaction = fragmentManager!!.beginTransaction()
+        addWordFragment.show(fragmentTransaction, "dialog")
     }
 }

@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/leftImage"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
 
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
@@ -34,7 +34,7 @@
 
         app:layout_constraintBottom_toTopOf="@id/secondaryText"
         app:layout_constraintLeft_toRightOf="@id/leftImage"
-        app:layout_constraintRight_toLeftOf="@id/rightImage"
+        app:layout_constraintRight_toLeftOf="@id/right_layout"
         app:layout_constraintTop_toTopOf="parent" />
 		
 	<TextView
@@ -52,20 +52,26 @@
         app:layout_constraintLeft_toLeftOf="@id/mainText"
         app:layout_constraintRight_toRightOf="@id/mainText"/>
 
-    <ImageView
-        android:id="@+id/rightImage"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+    <LinearLayout
+        android:id="@+id/right_layout"
+        android:layout_width="58dp"
+        android:layout_height="0dp"
 
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:gravity="center"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/mainText"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent">
+
+        <ImageView
+            android:id="@+id/rightImage"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+
+    </LinearLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

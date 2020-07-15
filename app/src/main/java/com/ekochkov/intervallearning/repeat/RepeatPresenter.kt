@@ -8,6 +8,7 @@ import com.ekochkov.intervallearning.room.Word
 import com.ekochkov.intervallearning.utils.DateHelper
 import com.ekochkov.intervallearning.utils.SimpleCallback
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 public class RepeatPresenter(roomController: RoomController):
@@ -27,7 +28,7 @@ public class RepeatPresenter(roomController: RoomController):
                     currentWord = wordList.get(0)
                     getView()?.showWord(currentWord.original)
                 } else {
-                    getView()?.showFinish()
+                    finish("слова закончились")
                 }
                 getView()?.hideButtons()
             }
@@ -42,11 +43,16 @@ public class RepeatPresenter(roomController: RoomController):
                     currentWord = wordList.get(0)
                     getView()?.showWord(currentWord.original)
                 } else {
-                    getView()?.showFinish()
+                    finish("слова закончились")
                 }
                 getView()?.hideButtons()
             }
         })
+    }
+
+    private fun finish(message: String) {
+        getView()?.showFinish(message)
+        closeFragmentTimer()
     }
 
     private fun processingWord(answer: Boolean, callback: SimpleCallback<Int>) {
@@ -76,15 +82,31 @@ public class RepeatPresenter(roomController: RoomController):
     override fun viewIsReady() {
         Log.d(LOG_TAG, "viewIsReady()")
         getView()?.hideButtons()
-        getRepeatWordList(object: SimpleCallback<Int> {
-            override fun onResult(item: Int) {
-                if (item!=0) {
+        getRepeatWordList(object: SimpleCallback<ArrayList<Word>> {
+            override fun onResult(item: ArrayList<Word>) {
+                if (item.size!=0) {
+                    wordList = item
+                    currentWord = wordList.get(0)
                     getView()?.showWord(currentWord.original)
                 } else {
-                    getView()?.showToast("слов для проверки не найдено")
+                    //getView()?.showToast("слов для проверки не найдено")
+                    finish("слов для проверки не найдено")
                 }
             }
         })
+    }
+
+    private fun closeFragmentTimer() {
+        Log.d(LOG_TAG, "closeFragmentTimer()")
+        Thread(Runnable {
+                try {
+                    Log.d(LOG_TAG, "TimeUnit.SECONDS.sleep(3)")
+                    TimeUnit.SECONDS.sleep(3)
+                    getView()?.closeFragment()
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+        }).start()
     }
 
     val LOG_TAG = RepeatPresenter::class.java.name + " BMTH "
@@ -96,16 +118,14 @@ public class RepeatPresenter(roomController: RoomController):
         this.roomController=roomController
     }
 
-    private fun getRepeatWordList(callback: SimpleCallback<Int>) {
+    private fun getRepeatWordList(callback: SimpleCallback<ArrayList<Word>>) {
         roomController.getRepeatWords(object: RoomController.RoomAsyncCallback<ArrayList<Word>> {
             override fun onSuccess(item: ArrayList<Word>) {
                 Log.d(LOG_TAG, "RepeatWordList.size: ${item.size}")
-                item.forEach {
-                    Log.d(LOG_TAG, "word: ${it.original}, time: ${DateHelper.convertFromLongToStringFormat(DateHelper.FORMAT_dd_MM_YYYY, it.repeat_time!!.toLong())}")
-                }
-                wordList = item
-                currentWord = wordList.get(0)
-                callback.onResult(wordList.size)
+                //item.forEach {
+                //    Log.d(LOG_TAG, "word: ${it.original}, time: ${DateHelper.convertFromLongToStringFormat(DateHelper.FORMAT_dd_MM_YYYY, it.repeat_time!!.toLong())}")
+                //}
+                callback.onResult(item)
             }
 
             override fun onComplete() {

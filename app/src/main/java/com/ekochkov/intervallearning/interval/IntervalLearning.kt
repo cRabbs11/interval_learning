@@ -36,18 +36,25 @@ public class IntervalLearning {
 	 * возвращает количество дней до повторения
 	 */
 	fun getDaysToRepeat(repeatTime: Long): Int {
+		Log.d(LOG_TAG, "getDaysToRepeat")
+		Log.d(LOG_TAG, "repeatTime: ${repeatTime}")
 		var days = 0
 		var cuttentTime = DateHelper.getCurrentLongTime()
 
 		days = ((repeatTime-cuttentTime)/ONE_DAY).toInt()
-
+		Log.d(LOG_TAG, "days: ${days}")
 		if (days==0) {
+
 			var repeatDate = DateHelper.convertFromLongToStringFormat(DateHelper.FORMAT_yyyyMMdd, repeatTime).toInt()
 			var currentDate = DateHelper.convertFromLongToStringFormat(DateHelper.FORMAT_yyyyMMdd, cuttentTime).toInt()
 			if (repeatDate>currentDate) {
-				days = repeatDate-currentDate
+				Log.d(LOG_TAG, "repeatDate: ${repeatDate}")
+				Log.d(LOG_TAG, "currentDate: ${currentDate}")
+				//days = repeatDate-currentDate
+				days = 1
 			}
 		}
+		Log.d(LOG_TAG, "days: ${days}")
 		return days
 	}
 	
@@ -59,6 +66,7 @@ public class IntervalLearning {
 			setlevelDownWord(word)
 		}
 		word?.repeat_time = getNewRepeatTime(DateHelper.getCurrentLongTime().toString(), word?.interval_level!!)
+		Log.d(LOG_TAG, "newRepeatTime: ${word.repeat_time}")
 	}
 
     /**
@@ -77,11 +85,14 @@ public class IntervalLearning {
      * опустить слово в уровне
      */
     private fun setlevelDownWord(word: Word?): Word? {
+		Log.d(LOG_TAG, "setlevelDownWord...")
+		Log.d(LOG_TAG, "word: ${word?.original}, level: ${word?.interval_level}")
         var value = word?.interval_level?.toInt()
 		if (value!=null && value>1) {
-			value--
+			value=1
 			word?.interval_level="$value"
 		}
+		Log.d(LOG_TAG, "result level: ${word?.interval_level}")
 		return word
     }
 	
@@ -113,6 +124,8 @@ public class IntervalLearning {
 	* @return время в Long в виде строки
 	*/
 	fun getNewRepeatTime(oldTime: String, level: String): String {
+		Log.d(LOG_TAG, "getNewRepeatTime: ")
+		Log.d(LOG_TAG, "oldTime: ${oldTime}, level: ${level}")
 		when(level) {
 			"1" -> {return (oldTime.toLong()+ LEVEL_ONE_REPEAT_TIME).toString()}
 			"2" -> {return (oldTime.toLong()+ LEVEL_TWO_REPEAT_TIME).toString()}
@@ -124,7 +137,7 @@ public class IntervalLearning {
 			"8" -> {return (oldTime.toLong()+ LEVEL_EIGHT_REPEAT_TIME).toString()}
 			"9" -> {return (oldTime.toLong()+ LEVEL_NINE_REPEAT_TIME).toString()}
 			"10" -> {return (oldTime.toLong()+ LEVEL_TEN_REPEAT_TIME).toString()}
-			else -> {return (oldTime.toLong()+ LEVEL_ONE_REPEAT_TIME).toString()}
+			else -> {return (oldTime)}
 		}
 	}
 }

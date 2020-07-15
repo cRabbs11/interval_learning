@@ -1,6 +1,7 @@
 package com.ekochkov.intervallearning.repeat
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -13,12 +14,15 @@ import com.ekochkov.intervallearning.R
 import com.ekochkov.intervallearning.room.RoomController
 
 class RepeatFragment : Fragment(), RepeatContract.View {
+    override fun closeFragment() {
+        Log.d(LOG_TAG, "closeFragment")
+        activity?.onBackPressed()
+    }
 
     override fun showButtons() {
         positiveButton.visibility=VISIBLE
         negativeButton.visibility=VISIBLE
     }
-
     override fun hideButtons() {
         positiveButton.visibility=GONE
         negativeButton.visibility=GONE
@@ -28,13 +32,13 @@ class RepeatFragment : Fragment(), RepeatContract.View {
         wordText.setText(word)
     }
 
-    override fun showToast(toast: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showToast(message: String) {
+        Toast.makeText(context, message, LENGTH_SHORT).show()
     }
 
-    override fun showFinish() {
-        Toast.makeText(context, "слова закончились", LENGTH_SHORT).show()
-        wordLayout.visibility= GONE
+    override fun showFinish(message: String) {
+        Toast.makeText(context, message, LENGTH_SHORT).show()
+       // wordLayout.visibility= GONE
     }
 
 

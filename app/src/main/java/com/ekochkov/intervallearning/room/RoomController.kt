@@ -46,16 +46,19 @@ class RoomController(context: Context) {
                 override fun onSuccess(word: Word) {
                     Log.d(LOG_TAG, "db.wordDao().getAllCoins() onSuccess")
                     callback.onSuccess(word)
+                    db.close()
                 }
 
                 override fun onComplete() {
                     Log.d(LOG_TAG, "db.wordDao().getAllCoins() onComplete")
                     callback.onComplete()
+                    db.close()
 
                 }
 
                 override fun onError(e: Throwable) {
                     Log.d(LOG_TAG, "db.wordDao().getAllCoins() onError: $e")
+                    db.close()
                 }
 
             })
@@ -248,14 +251,17 @@ class RoomController(context: Context) {
                 .subscribe(object: DisposableMaybeObserver<Word>() {
                     override fun onSuccess(word: Word) {
                         callback.onSuccess(word)
+                        db.close()
                     }
 
                     override fun onComplete() {
                         Log.d(LOG_TAG, "db.wordDao().getAllCoins() onComplete")
+                        db.close()
                     }
 
                     override fun onError(e: Throwable) {
                         Log.d(LOG_TAG, "db.wordDao().getAllCoins() onError: $e")
+                        db.close()
                     }
 
                 })

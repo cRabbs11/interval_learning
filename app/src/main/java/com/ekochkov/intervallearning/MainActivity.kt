@@ -18,13 +18,7 @@ import com.ekochkov.intervallearning.interval.IntervalController
 
 
 
-class MainActivity : AppCompatActivity(), SimpleCallback<Int> {
-
-    override fun onResult(item: Int) {
-        Log.d(LOG_TAG, "onResult")
-        //notificationLayout.visibility=VISIBLE
-        //notificationInfo.text = "пришло время повторить слова: ${item}"
-    }
+class MainActivity : AppCompatActivity() {
 
     val LOG_TAG = MainActivity::class.java.getName() + " BMTH "
 	lateinit var navController: NavController
@@ -40,7 +34,9 @@ class MainActivity : AppCompatActivity(), SimpleCallback<Int> {
     override fun onStart() {
         Log.d(LOG_TAG, "onStart()")
         super.onStart()
-        intervalController = IntervalController.Companion.getInstance(this)
+        intervalController = IntervalController.Companion.getInstance(applicationContext)
+
+
         intervalController.startService(object: SimpleCallback<String> {
             override fun onResult(item: String) {
                 Log.d(LOG_TAG, "intervalController onResult: ${item}")
@@ -54,6 +50,7 @@ class MainActivity : AppCompatActivity(), SimpleCallback<Int> {
     override fun onStop() {
         Log.d(LOG_TAG, "onStop()")
         intervalController.setAppStatus(false)
+        intervalController.unbindService()
         super.onStop()
     }
 

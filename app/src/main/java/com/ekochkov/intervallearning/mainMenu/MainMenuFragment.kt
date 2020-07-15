@@ -1,48 +1,47 @@
 package com.ekochkov.intervallearning.mainMenu
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ekochkov.intervallearning.CategoryListAdapter
-import com.ekochkov.intervallearning.MainActivity
 import com.ekochkov.intervallearning.R
 import com.ekochkov.intervallearning.interval.IntervalController
-import com.ekochkov.intervallearning.interval.IntervalService
+import com.ekochkov.intervallearning.mainMenu.addCategory.AddCategoryDialogFragment
 import com.ekochkov.intervallearning.room.Category
 import com.ekochkov.intervallearning.room.RoomController
-import com.ekochkov.intervallearning.room.Word
 import com.ekochkov.intervallearning.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMenuContract.View,
-    OnViewLongClickListener<View, Category> {
+    AddCategoryDialogFragment.AddWordDialogListener {
 
-    override fun onViewLongClick(view: View, item: Category) {
-        Log.d(LOG_TAG, "onViewLongClick view: ${context?.resources?.getResourceName(view.id)}")
+    override fun onDialogPositiveClick(bundle: Bundle) {
+        bundle.putString("status", "1")
+        view?.findNavController()?.navigate(R.id.action_fragmentMainMenu_to_fragmentAddCategory, bundle)
+    }
+
+    override fun onDialogNegativeClick() {
+
     }
 
     override fun hideRepeatLayout() {
-        notificationLayout.visibility = GONE
+        notificationBtn.visibility = GONE
     }
 
     override fun showRepeatLayout(text: String) {
-        notificationLayout.visibility = VISIBLE
-        notificationInfo.text = text
+        notificationBtn.visibility = VISIBLE
+        notificationBtn.text = text
     }
 
     override fun startRepeat() {
@@ -55,9 +54,13 @@ class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMe
 	}
 	
     override fun addNewCategory() {
-        var bundle = Bundle()
-        bundle.putInt("status", 1)
-        view?.findNavController()?.navigate(R.id.fragmentAddCategory, bundle)
+        presenter.createCategoryName(object: SimpleCallback<String> {
+            override fun onResult(item: String) {
+                var bundle = Bundle()
+                bundle.putString("categoryName", item)
+                openAddCategoryFragment(bundle)
+            }
+        })
     }
 
     override fun onViewClick(view: View, item: Category) {
@@ -67,7 +70,7 @@ class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMe
 
         when (view.id) {
             R.id.rightImage -> {presenter.onCategoryStatusClicked(item)}
-            else -> {view?.findNavController()?.navigate(R.id.fragmentAddCategory, bundle)}
+            else -> {view?.findNavController()?.navigate(R.id.action_fragmentMainMenu_to_fragmentAddCategory, bundle)}
         }
     }
 
@@ -75,6 +78,11 @@ class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMe
         Log.d(LOG_TAG, "coins count: ${list.size} ")
         adapter.clearItems()
         adapter.setItems(list)
+        if (list.isEmpty()) {
+            emptyRecyclerMessageLayout.visibility= VISIBLE
+        } else {
+            emptyRecyclerMessageLayout.visibility= GONE
+        }
     }
 
     val LOG_TAG = MainMenuFragment::class.java.name + " BMTH "
@@ -83,8 +91,8 @@ class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMe
     lateinit var floatingBtn: FloatingActionButton
     lateinit var presenter: MainMenuPresenter
     lateinit var adapter: CategoryListAdapter
-    lateinit var notificationLayout: LinearLayout
-    lateinit var notificationInfo : TextView
+    lateinit var notificationBtn: Button
+    lateinit var emptyRecyclerMessageLayout: LinearLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_main_menu, container, false)
@@ -97,20 +105,20 @@ class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMe
         recyclerView = rootView.findViewById(R.id.recycler_view)
         var linearLayoutManager = LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false)
         recyclerView!!.setLayoutManager(linearLayoutManager)
-        notificationInfo = rootView.findViewById(R.id.notification_info)
+        emptyRecyclerMessageLayout = rootView.findViewById(R.id.empty_recycler_message_layout)
 
         floatingBtn = rootView.findViewById(R.id.floating_btn)
         floatingBtn.setOnClickListener {
             presenter.onFloatingBtnClicked()
         }
 
-        notificationLayout = rootView.findViewById(R.id.notification_layout)
-        notificationLayout.setOnClickListener {
+        notificationBtn = rootView.findViewById(R.id.notification_btn)
+        notificationBtn.setOnClickListener {
             presenter.onNotificationClicked()
         }
 
         Log.d(LOG_TAG, " запустили")
-        adapter = CategoryListAdapter(this, this)
+        adapter = CategoryListAdapter(this)
         recyclerView!!.setAdapter(adapter)
         var dividerItemDecoration = DividerItemDecoration(recyclerView!!.getContext(),
             LinearLayoutManager.VERTICAL)
@@ -133,5 +141,14 @@ class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMe
     override fun onStop() {
         super.onStop()
         Log.d(LOG_TAG, " onStop()")
+    }
+
+    private fun openAddCategoryFragment(bundle: Bundle) {
+        var addCategoryFragment = AddCategoryDialogFragment(this)
+        addCategoryFragment.arguments = bundle
+
+        var fragmentManager = getFragmentManager()
+        var fragmentTransaction = fragmentManager!!.beginTransaction()
+        addCategoryFragment.show(fragmentTransaction, "dialog")
     }
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/category_name_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/string_category_name">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/category_name"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:maxLength="50" />
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+        android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="right">
+
+		<Button
+			android:id="@+id/cancel_button"
+			android:text="@string/string_cancel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"/>
+
+		<Button
+			android:id="@+id/add_button"
+			android:text="@string/string_add_word"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"/>
+
+	</LinearLayout>
+
+
+</LinearLayout>

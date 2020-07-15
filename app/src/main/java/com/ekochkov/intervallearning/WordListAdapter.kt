@@ -6,20 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.ekochkov.intervallearning.interval.IntervalLearning
 import com.ekochkov.intervallearning.room.Word
 import com.ekochkov.intervallearning.utils.OnItemClickListener
+import com.ekochkov.intervallearning.utils.OnWordItemClickListener
 import kotlin.collections.ArrayList
 
 
-open class WordListAdapter(clickListener: OnItemClickListener<Word>) : RecyclerView.Adapter<WordHolder>() {
+open class WordListAdapter(clickListener: OnWordItemClickListener<Word>) : RecyclerView.Adapter<WordHolder>() {
 
     val LOG_TAG = CategoryListAdapter::class.java.name + " BMTH "
 
-    private var clickListener: OnItemClickListener<Word>
+    private var clickListener: OnWordItemClickListener<Word>
     private var words = arrayListOf<Word>()
     private lateinit var context: Context
 
@@ -49,12 +51,21 @@ open class WordListAdapter(clickListener: OnItemClickListener<Word>) : RecyclerV
     override fun onBindViewHolder(holder: WordHolder, position: Int) {
         Log.d(LOG_TAG, "onBindViewHolder")
         val word = words[position]
+        Log.d(LOG_TAG, "word: ${word.original}, id: ${word.id}")
 		holder.mainText.text = "${word.original}-${word.translate}"
         var intervalLearning = IntervalLearning()
         var dayToRepeat = intervalLearning.getDaysToRepeat(word.repeat_time!!.toLong())
         holder.secondaryText.text= "дней осталось: ${dayToRepeat}"
-        holder.category_item.setOnClickListener {
-            clickListener.onItemClick(word)
+        holder.left_view.setImageResource(R.drawable.ic_edit_black_24dp)
+        holder.left_view.setOnClickListener {
+            clickListener.onChangeClick(word)
+        }
+        holder.mainText.setOnClickListener {
+            clickListener.onChangeClick(word)
+        }
+        holder.right_view.setImageResource(R.drawable.ic_delete_black_24dp)
+        holder.rightLayout.setOnClickListener {
+            clickListener.onDeleteClick(word)
         }
     }
 
@@ -73,6 +84,7 @@ class WordHolder(
 	var secondaryText: TextView
     var left_view: ImageView
     var right_view: ImageView
+    var rightLayout: LinearLayout
     var category_item: ConstraintLayout
 
     init {
@@ -81,5 +93,6 @@ class WordHolder(
         left_view = itemView.findViewById(R.id.leftImage)
         right_view = itemView.findViewById(R.id.rightImage)
         category_item = itemView.findViewById(R.id.category_item)
+        rightLayout = itemView.findViewById(R.id.right_layout)
     }
 }

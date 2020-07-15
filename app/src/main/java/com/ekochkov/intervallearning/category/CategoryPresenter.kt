@@ -2,6 +2,9 @@ package com.ekochkov.intervallearning.category
 
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.ekochkov.intervallearning.category.addWord.AddWordFragment
 import com.ekochkov.intervallearning.interval.IntervalLearning
 import com.ekochkov.intervallearning.mvp.PresenterBase
 import com.ekochkov.intervallearning.room.RoomController
@@ -13,20 +16,28 @@ import com.ekochkov.intervallearning.utils.SimpleCallback
 public class CategoryPresenter(roomController: RoomController):
         PresenterBase<CategoryContract.View>(), CategoryContract.Presenter {
 
-	override fun onDeleteWordClicked() {
-		var bundle = getView()?.getWordData()
+	override fun onShowAddDialogClicked() {
+		showAddWordDialog()
+	}
 
-		var wordOriginal = bundle?.getString("wordOriginal")
-		var categoryName = bundle?.getString("categoryName")
+	override fun onDeleteWordClicked(word: Word) {
+
+		var wordOriginal = word.original
+		var categoryName = word.category
+		//Log.d(LOG_TAG, "onDeleteWordClicked: ")
+        //Log.d(LOG_TAG, "word.id: ${word.id}")
+		//Log.d(LOG_TAG, "word.original: ${word.original}")
+		//Log.d(LOG_TAG, "word.category: ${word.category}")
 
 		isWordExist(wordOriginal, categoryName, object: SimpleCallback<Int?> {
 			override fun onResult(id: Int?) {
+                Log.d(LOG_TAG, "isWordExist: ${id}")
 				if (id==-5) {
 					getView()?.showToast("слово не найдено")
 				} else {
 					deleteWordFromBD(id, object: SimpleCallback<Int?> {
 						override fun onResult(item: Int?) {
-							if (id==-5) {
+							if (item==-5) {
 								getView()?.showToast("слово не найдено")
 							} else {
 								getWordList(categoryName)
@@ -38,6 +49,44 @@ public class CategoryPresenter(roomController: RoomController):
 				}
 			}
 
+		})
+	}
+
+	private fun showAddWordDialog() {
+		Log.d(LOG_TAG, "showAddWordDialog")
+
+	}
+
+	override fun onChangeWordClicked(word: Word) {
+
+	}
+
+	override fun onAddWordClicked(bundle: Bundle) {
+		Log.d(LOG_TAG, "onSaveImageButtonClicked")
+		var wordOriginal = bundle?.getString("wordOriginal")
+		var wordTranslate = bundle?.getString("wordTranslate")
+		var categoryName = bundle?.getString("categoryName")
+
+		isWordExist(wordOriginal, categoryName, object: SimpleCallback<Int?> {
+			override fun onResult(id: Int?) {
+				if (id==-5) {
+					addNewWordInBD(wordOriginal, wordTranslate, categoryName, object: SimpleCallback<Long?> {
+						override fun onResult(item: Long?) {
+							getWordList(categoryName)
+							getView()?.clearEditText()
+							getView()?.showToast("слово добавлено")
+						}
+					})
+				} else {
+					updateWordInBD(id, wordOriginal, wordTranslate, categoryName, object: SimpleCallback<Int?> {
+						override fun onResult(item: Int?) {
+							getWordList(categoryName)
+							getView()?.clearEditText()
+							getView()?.showToast("слово обновлено")
+						}
+					})
+				}
+			}
 		})
 	}
 

@@ -9,12 +9,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.evgenykochkov.moneta.MainActivity.ftrans
-import ru.evgenykochkov.moneta.R
-import ru.evgenykochkov.moneta.catalog.vid_chekana.RecyclerVidChekanaAdapter
-import ru.evgenykochkov.moneta.change.OnItemClickListener
-import ru.evgenykochkov.moneta.database.DBController
-import ru.evgenykochkov.moneta.model.VidChekana
+
 
 class IntervalListFragmen : Fragment() {
 

@@ -4,4 +4,6 @@
 	<string name="string_word_original">слово</string>
 	<string name="string_word_translate">перевод</string>
 	<string name="start_activity_mode">repeat</string>
+	<string name="string_add_word">добавить</string>
+	<string name="string_cancel">отмена</string>
 </resources>
