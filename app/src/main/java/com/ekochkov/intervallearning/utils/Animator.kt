@@ -14,6 +14,12 @@ public class Animator {
         const val SHOW_ANIMATION=1
     }
 
+    interface AnimationListener {
+        fun animationStart()
+        fun animationOnHalf()
+        fun animationEnd()
+    }
+
     val LOG_TAG = Animator::class.java.name + " BMTH "
 
     fun hideMoveToRight(view: View) {
@@ -72,5 +78,60 @@ public class Animator {
 
         })
         set.start()
+    }
+
+    fun turnOverHorizontal(view: View, listener: AnimationListener) {
+        val reduceX = ObjectAnimator.ofFloat(view, View.SCALE_X, 0.01f)
+        val enlargeX = ObjectAnimator.ofFloat(view, View.SCALE_X, 1f)
+		
+		val reduceY = ObjectAnimator.ofFloat(view, View.SCALE_Y, 0.7f)
+		val enlargeY = ObjectAnimator.ofFloat(view, View.SCALE_Y, 1f)
+		
+        val set = AnimatorSet()
+		set.play(reduceX).with(reduceY)
+		set.play(enlargeX).with(enlargeY)
+		
+        set.play(enlargeX).after(reduceX)
+		
+        set.duration=300
+
+        reduceX.addListener( object: Animator.AnimatorListener {
+            override fun onAnimationRepeat(p0: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                listener.animationOnHalf()
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+
+            }
+
+            override fun onAnimationStart(p0: Animator?) {
+                listener.animationStart()
+            }
+
+        })
+
+        enlargeX.addListener( object: Animator.AnimatorListener{
+            override fun onAnimationRepeat(p0: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                listener.animationEnd()
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+
+            }
+
+            override fun onAnimationStart(p0: Animator?) {
+
+            }
+        })
+
+        set.start()    
     }
 }
