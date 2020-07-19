@@ -95,27 +95,6 @@ public class IntervalLearning {
 		Log.d(LOG_TAG, "result level: ${word?.interval_level}")
 		return word
     }
-	
-	/**
-     * пересчитать время следующей проверки
-     */
-	private fun setRepeatTime(word: Word?) {
-		//Log.d(LOG_TAG, "rebuildWord() word.level: ${word?.interval_level}")
-		when(word?.interval_level) {
-			//"1" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_ONE_REPEAT_TIME).toString()}
-			//"2" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_TWO_REPEAT_TIME).toString()}
-			"1" -> {word.repeat_time = (word.repeat_time!!.toLong()+ FIVE_MINUTES_REPEAT_TIME).toString()}
-			"2" -> {word.repeat_time = (word.repeat_time!!.toLong()+ TEN_MINUTES_REPEAT_TIME).toString()}
-			"3" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_THREE_REPEAT_TIME).toString()}
-			"4" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_FOUR_REPEAT_TIME).toString()}
-			"5" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_FIVE_REPEAT_TIME).toString()}
-			"6" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_SIX_REPEAT_TIME).toString()}
-			"7" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_SEVEN_REPEAT_TIME).toString()}
-			"8" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_EIGHT_REPEAT_TIME).toString()}
-			"9" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_NINE_REPEAT_TIME).toString()}
-			"10" -> {word.repeat_time = (word.repeat_time!!.toLong()+ LEVEL_TEN_REPEAT_TIME).toString()}
-		}
-	}
 
 	/**
 	* получить время повторения нового слова (1 уровень )
@@ -127,6 +106,7 @@ public class IntervalLearning {
 		Log.d(LOG_TAG, "getNewRepeatTime: ")
 		Log.d(LOG_TAG, "oldTime: ${oldTime}, level: ${level}")
 		when(level) {
+			"0" -> {return (oldTime.toLong()).toString()}
 			"1" -> {return (oldTime.toLong()+ LEVEL_ONE_REPEAT_TIME).toString()}
 			"2" -> {return (oldTime.toLong()+ LEVEL_TWO_REPEAT_TIME).toString()}
 			"3" -> {return (oldTime.toLong()+ LEVEL_THREE_REPEAT_TIME).toString()}
