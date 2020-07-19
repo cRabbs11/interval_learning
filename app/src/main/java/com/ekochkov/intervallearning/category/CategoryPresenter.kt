@@ -166,7 +166,7 @@ public class CategoryPresenter(roomController: RoomController):
 	private fun addNewWordInBD(wordOriginal: String?, wordTranslate: String?, categoryName: String?, callback: SimpleCallback<Long?>) {
 		Log.d(LOG_TAG, "addNewWordInBD")
 		var repeatTime = getNewWordRepeatTime()
-		var intervalLevel = "1"
+		var intervalLevel = "0"
 		var status = getNewWordStatus(getView()?.getBundle())
 		roomController.insertWord(wordOriginal, wordTranslate, categoryName, repeatTime, intervalLevel, status, object: RoomController.RoomAsyncCallback<Long> {
 			override fun onSuccess(id: Long) {
@@ -280,5 +280,26 @@ public class CategoryPresenter(roomController: RoomController):
 		} else {
 			return 0
 		}
-	}	
+	}
+
+	/*
+	* Поиск по словам
+	*/
+	fun searchWords(category: String, search: String) {
+		Log.d(LOG_TAG, "searchWords")
+        if (!search.equals("%%")) {
+            roomController.searchByOriginal(category, search, object: RoomController.RoomAsyncCallback<ArrayList<Word>> {
+				override fun onComplete() {
+				}
+
+				override fun onSuccess(item: ArrayList<Word>) {
+                    var words = item
+                    getView()?.showWordList(words)
+                }
+            })
+        } else {
+            getWordList(category)
+        }
+    }
+	
 }

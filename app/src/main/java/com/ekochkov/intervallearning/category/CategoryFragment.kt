@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -105,11 +106,63 @@ class CategoryFragment : Fragment(), OnWordItemClickListener<Word>, AddWordFragm
     lateinit var presenter: CategoryPresenter
     lateinit var adapter: WordListAdapter
     lateinit var emptyRecyclerMessageLayout: LinearLayout
+	
+	override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_add_category, container, false)
         initView(rootView)
         return rootView
+    }
+	
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+	
+	override fun onOptionsItemSelected(item: MenuItem): Boolean{
+        when(item.getItemId()) {
+            R.id.menu_options_search-> { handleSearch(item) }    
+        }
+        return super.onOptionsItemSelected(item)
+    }
+	
+	/*
+	* Поиск по словам
+	*/
+	private fun handleSearch(item: MenuItem) {
+        var searchView = item.getActionView() as SearchView
+        item.expandActionView()
+		var likeQuery = ""
+        searchView.setQuery(likeQuery, false)
+        //var selectionArgs= ""
+		var category = arguments!!.getString("categoryName")
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.equals("")) {                
+                    //selectionArgs =  arrayOf("%${query}%")
+					var search = "%${query}%"
+                    if (category!=null) {
+                        presenter.searchWords(category, search)
+                    }
+
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                //selectionArgs =  arrayOf("%${newText}%")
+                var search = "%${query}%"
+                if (category!=null) {
+                    presenter.searchWords(category, search)
+                }
+                return true
+            }
+        })
     }
 
     fun initView(rootView: View ) {
