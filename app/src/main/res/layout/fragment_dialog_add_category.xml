@@ -3,7 +3,8 @@
 	android:orientation="vertical"
 	xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+	android:background="@drawable/background_white_rounded">
 
 	<LinearLayout
 		android:orientation="vertical"
@@ -31,21 +32,27 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:gravity="right">
+        android:gravity="right"
+		android:layout_marginBottom="5dp">
 
 		<Button
 			android:id="@+id/cancel_button"
 			android:text="@string/string_cancel"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp"
+			android:textColor="@color/colorWhite"
+			android:background="@drawable/default_button_selector"/>
 
 		<Button
 			android:id="@+id/add_button"
 			android:text="@string/string_add_word"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"/>
+            android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:textColor="@color/colorWhite"
+			android:background="@drawable/default_button_selector"/>
 
 	</LinearLayout>
 
