@@ -238,6 +238,32 @@ class RoomController(context: Context) {
             }
     }
 	
+	fun searchByOriginal(category: String, search: String, callback: RoomAsyncCallback<ArrayList<Word>>) {
+		val observable = Observable.create<ArrayList<Word>> {
+            val db = Room.databaseBuilder(
+                context,
+                WordDatabase::class.java, "words_db.sqlite")
+                .createFromAsset("databases/words_db.sqlite")
+                .build()
+            var arrayList = arrayListOf<Word>()
+            var list = db.wordDao().searchByOriginal(category, search)
+            list.forEach {
+                arrayList.add(it)
+            }
+            db.close()
+            it.onNext(arrayList)
+            it.onComplete()
+        }
+
+        observable.
+            observeOn(AndroidSchedulers.mainThread()).
+            subscribeOn(Schedulers.io()).
+            subscribe {
+                Log.d(LOG_TAG, "threadName: ${Thread.currentThread().getName()}")
+                callback.onSuccess(it)
+            }
+	}
+	
 	fun getById(id: Integer?, callback: RoomAsyncCallback<Word>) {
         val db = Room.databaseBuilder(
                 context,

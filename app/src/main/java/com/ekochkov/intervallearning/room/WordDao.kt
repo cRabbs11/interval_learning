@@ -23,6 +23,9 @@ interface WordDao {
     @Query("SELECT * FROM word WHERE original = (:originalWord)")
     fun getByOriginal(originalWord: String?): Maybe<Word>
 	
+	@Query("SELECT * FROM word WHERE category = (:category) AND original LIKE (:search)")
+	fun searchByOriginal(category: String, search: String): List<Word>
+	
 	@Update
 	fun update(word: Word?): Int
 
