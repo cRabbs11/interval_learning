@@ -14,9 +14,13 @@ import kotlin.collections.ArrayList
 public class RepeatPresenter(roomController: RoomController):
     PresenterBase<RepeatContract.View>(), RepeatContract.Presenter {
 
-    override fun onWordClicked() {
+    override fun onWordClicked(text: String) {
         Log.d(LOG_TAG, "onWordClicked")
-        getView()?.showWord(currentWord.translate)
+        if (text.equals(currentWord.original)) {
+            getView()?.showWord(currentWord.translate)
+        } else {
+            getView()?.showWord(currentWord.original)
+        }
         getView()?.showButtons()
     }
 
@@ -87,7 +91,7 @@ public class RepeatPresenter(roomController: RoomController):
                 if (item.size!=0) {
                     wordList = item
                     currentWord = wordList.get(0)
-                    getView()?.showWord(currentWord.original)
+                    getView()?.showFirstWord(currentWord.original)
                 } else {
                     //getView()?.showToast("слов для проверки не найдено")
                     finish("слов для проверки не найдено")

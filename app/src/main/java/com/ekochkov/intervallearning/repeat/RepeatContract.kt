@@ -8,6 +8,7 @@ public interface RepeatContract {
 
     interface View: MVPView {
         fun showWord(word: String?)
+        fun showFirstWord(word: String?)
         fun showToast(toast: String)
         fun showButtons()
         fun hideButtons()
@@ -18,6 +19,6 @@ public interface RepeatContract {
     interface Presenter: MvpPresenter<View> {
         fun onPositiveButtonClicked()
         fun onNegativeButtonClicked()
-        fun onWordClicked()
+        fun onWordClicked(text: String)
     }
 }

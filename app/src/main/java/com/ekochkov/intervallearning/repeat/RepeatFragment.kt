@@ -12,8 +12,10 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 import com.ekochkov.intervallearning.R
 import com.ekochkov.intervallearning.room.RoomController
+import com.ekochkov.intervallearning.utils.Animator
 
 class RepeatFragment : Fragment(), RepeatContract.View {
+
     override fun closeFragment() {
         Log.d(LOG_TAG, "closeFragment")
         activity?.onBackPressed()
@@ -29,6 +31,11 @@ class RepeatFragment : Fragment(), RepeatContract.View {
     }
 
     override fun showWord(word: String?) {
+        //wordText.setText(word)
+        turnOverWordCard(wordLayout, word)
+    }
+
+    override fun showFirstWord(word: String?) {
         wordText.setText(word)
     }
 
@@ -39,6 +46,26 @@ class RepeatFragment : Fragment(), RepeatContract.View {
     override fun showFinish(message: String) {
         Toast.makeText(context, message, LENGTH_SHORT).show()
        // wordLayout.visibility= GONE
+    }
+
+    fun turnOverWordCard(view: View, translateWord: String?) {
+        var animator = Animator()
+        animator.turnOverHorizontal(view, object: Animator.AnimationListener {
+            override fun animationStart() {
+                //Log.d(LOG_TAG, "animationStart")
+            }
+
+            override fun animationOnHalf() {
+                Log.d(LOG_TAG, "animationOnHalf")
+                wordText.text=translateWord
+            }
+
+            override fun animationEnd() {
+                //Log.d(LOG_TAG, "animationEnd")
+            }
+
+        })
+
     }
 
 
@@ -63,7 +90,7 @@ class RepeatFragment : Fragment(), RepeatContract.View {
 
         wordLayout = rootView.findViewById(R.id.word_layout)
         wordLayout.setOnClickListener {
-            presenter.onWordClicked()
+            presenter.onWordClicked(wordText.text.toString())
         }
         wordText = rootView.findViewById(R.id.word_text)
 
