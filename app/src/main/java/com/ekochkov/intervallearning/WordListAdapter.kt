@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.ekochkov.intervallearning.interval.IntervalLearning
+import com.ekochkov.intervallearning.room.RoomController
 import com.ekochkov.intervallearning.room.Word
 import com.ekochkov.intervallearning.utils.OnItemClickListener
 import com.ekochkov.intervallearning.utils.OnWordItemClickListener
@@ -23,6 +24,7 @@ open class WordListAdapter(clickListener: OnWordItemClickListener<Word>) : Recyc
 
     private var clickListener: OnWordItemClickListener<Word>
     private var words = arrayListOf<Word>()
+    private var filterType = RoomController.WORD_LIST_FILTER_BY_ORIGINAL
     private lateinit var context: Context
 
     init {
@@ -32,6 +34,23 @@ open class WordListAdapter(clickListener: OnWordItemClickListener<Word>) : Recyc
 
     fun setItems(list: ArrayList<Word>) {
         words = list
+        orderWordListBy(filterType)
+        notifyDataSetChanged()
+    }
+
+    fun orderWordListBy(filterType: Int) {
+        this.filterType = filterType
+        when (filterType) {
+            RoomController.WORD_LIST_FILTER_BY_ORIGINAL -> {
+                words.sortBy { it.original}
+            }
+            RoomController.WORD_LIST_FILTER_BY_TRANSLATE -> {
+                words.sortBy { it.translate }
+            }
+            RoomController.WORD_LIST_FILTER_BY_REPEAT_TIME -> {
+                words.sortBy { it.repeat_time }
+            }
+        }
         notifyDataSetChanged()
     }
 

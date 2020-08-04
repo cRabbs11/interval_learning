@@ -21,11 +21,15 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.ekochkov.intervallearning.WordListAdapter
 import com.ekochkov.intervallearning.category.addWord.AddWordFragment
+import com.ekochkov.intervallearning.room.RoomController.Companion.WORD_LIST_FILTER_BY_ORIGINAL
+import com.ekochkov.intervallearning.room.RoomController.Companion.WORD_LIST_FILTER_BY_REPEAT_TIME
+import com.ekochkov.intervallearning.room.RoomController.Companion.WORD_LIST_FILTER_BY_TRANSLATE
 import com.ekochkov.intervallearning.utils.OnWordItemClickListener
 import com.ekochkov.intervallearning.utils.QuestionDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class CategoryFragment : Fragment(), OnWordItemClickListener<Word>, AddWordFragment.AddWordDialogListener, CategoryContract.View {
+
     override fun onDialogPositiveClick(bundle: Bundle) {
         //Log.d(LOG_TAG, "onDialogPositiveClick: ${value} ")
         presenter.onAddWordClicked(bundle)
@@ -125,7 +129,10 @@ class CategoryFragment : Fragment(), OnWordItemClickListener<Word>, AddWordFragm
 	
 	override fun onOptionsItemSelected(item: MenuItem): Boolean{
         when(item.getItemId()) {
-            R.id.menu_options_search-> { handleSearch(item) }    
+            R.id.menu_options_search-> { handleSearch(item) }
+            R.id.menu_options_filter_by_original -> {adapter.orderWordListBy(WORD_LIST_FILTER_BY_ORIGINAL)}
+            R.id.menu_options_filter_by_translate -> {adapter.orderWordListBy(WORD_LIST_FILTER_BY_TRANSLATE)}
+            R.id.menu_options_filter_by_repeat_time -> {adapter.orderWordListBy(WORD_LIST_FILTER_BY_REPEAT_TIME)}
         }
         return super.onOptionsItemSelected(item)
     }
