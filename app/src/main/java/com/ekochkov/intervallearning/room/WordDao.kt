@@ -28,6 +28,15 @@ interface WordDao {
 
     @Query("SELECT * FROM word WHERE category = (:category) AND original LIKE (:search) OR translate LIKE (:search)")
     fun searchByOriginalOrTranslate(category: String, search: String): List<Word>
+
+    @Query("SELECT * FROM word WHERE category = (:category) AND original LIKE (:search) OR translate LIKE (:search) ORDER BY original ASC")
+    fun searchByOriginalOrTranslateFilterByOriginal(category: String, search: String): List<Word>
+
+    @Query("SELECT * FROM word WHERE category = (:category) AND original LIKE (:search) OR translate LIKE (:search) ORDER BY translate ASC")
+    fun searchByOriginalOrTranslateFilterByTranslate(category: String, search: String): List<Word>
+
+    @Query("SELECT * FROM word WHERE category = (:category) AND original LIKE (:search) OR translate LIKE (:search) ORDER BY repeat_time ASC")
+    fun searchByOriginalOrTranslateFilterByRepeatTime(category: String, search: String): List<Word>
 	
 	@Update
 	fun update(word: Word?): Int
