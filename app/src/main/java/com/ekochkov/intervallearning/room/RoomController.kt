@@ -246,7 +246,8 @@ class RoomController(context: Context) {
                 .createFromAsset("databases/words_db.sqlite")
                 .build()
             var arrayList = arrayListOf<Word>()
-            var list = db.wordDao().searchByOriginal(category, search)
+            //var list = db.wordDao().searchByOriginal(category, search)
+            var list = db.wordDao().searchByOriginalOrTranslate(category, search)
             list.forEach {
                 arrayList.add(it)
             }
