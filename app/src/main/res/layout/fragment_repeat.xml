@@ -31,8 +31,7 @@
 				android:id="@+id/word_text"
 				android:gravity="center"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:text="Карточка со словом" />
+				android:layout_height="match_parent" />
 
 		</RelativeLayout>
 
