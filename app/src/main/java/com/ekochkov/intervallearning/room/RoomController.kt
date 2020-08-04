@@ -28,6 +28,12 @@ class RoomController(context: Context) {
         fun onComplete()
 	}
 
+    companion object {
+        val WORD_LIST_FILTER_BY_ORIGINAL = 1
+        val WORD_LIST_FILTER_BY_TRANSLATE = 2
+        val WORD_LIST_FILTER_BY_REPEAT_TIME = 3
+    }
+
     init {
         this.context=context
     }
