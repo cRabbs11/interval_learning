@@ -166,7 +166,7 @@ public class CategoryPresenter(roomController: RoomController):
 	private fun addNewWordInBD(wordOriginal: String?, wordTranslate: String?, categoryName: String?, callback: SimpleCallback<Long?>) {
 		Log.d(LOG_TAG, "addNewWordInBD")
 		var repeatTime = getNewWordRepeatTime()
-		var intervalLevel = "0"
+		var intervalLevel = "1"
 		var status = getNewWordStatus(getView()?.getBundle())
 		roomController.insertWord(wordOriginal, wordTranslate, categoryName, repeatTime, intervalLevel, status, object: RoomController.RoomAsyncCallback<Long> {
 			override fun onSuccess(id: Long) {
