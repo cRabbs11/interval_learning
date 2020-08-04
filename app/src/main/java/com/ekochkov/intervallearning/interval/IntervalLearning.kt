@@ -98,26 +98,26 @@ public class IntervalLearning {
 
 	/**
 	* получить время повторения нового слова (1 уровень )
-	* @param oldTime предыдущее время повторения
+	* @param nowTime время на момент проверки
 	* @param level уровень повторения
 	* @return время в Long в виде строки
 	*/
-	fun getNewRepeatTime(oldTime: String, level: String): String {
+	fun getNewRepeatTime(nowTime: String, level: String): String {
 		Log.d(LOG_TAG, "getNewRepeatTime: ")
-		Log.d(LOG_TAG, "oldTime: ${oldTime}, level: ${level}")
+		Log.d(LOG_TAG, "oldTime: ${nowTime}, level: ${level}")
 		when(level) {
-			"0" -> {return (oldTime.toLong()).toString()}
-			"1" -> {return (oldTime.toLong()+ LEVEL_ONE_REPEAT_TIME).toString()}
-			"2" -> {return (oldTime.toLong()+ LEVEL_TWO_REPEAT_TIME).toString()}
-			"3" -> {return (oldTime.toLong()+ LEVEL_THREE_REPEAT_TIME).toString()}
-			"4" -> {return (oldTime.toLong()+ LEVEL_FOUR_REPEAT_TIME).toString()}
-			"5" -> {return (oldTime.toLong()+ LEVEL_FIVE_REPEAT_TIME).toString()}
-			"6" -> {return (oldTime.toLong()+ LEVEL_SIX_REPEAT_TIME).toString()}
-			"7" -> {return (oldTime.toLong()+ LEVEL_SEVEN_REPEAT_TIME).toString()}
-			"8" -> {return (oldTime.toLong()+ LEVEL_EIGHT_REPEAT_TIME).toString()}
-			"9" -> {return (oldTime.toLong()+ LEVEL_NINE_REPEAT_TIME).toString()}
-			"10" -> {return (oldTime.toLong()+ LEVEL_TEN_REPEAT_TIME).toString()}
-			else -> {return (oldTime)}
+			"0" -> {return (nowTime.toLong()).toString()}
+			"1" -> {return (nowTime.toLong()+ LEVEL_ONE_REPEAT_TIME).toString()}
+			"2" -> {return (nowTime.toLong()+ LEVEL_TWO_REPEAT_TIME).toString()}
+			"3" -> {return (nowTime.toLong()+ LEVEL_THREE_REPEAT_TIME).toString()}
+			"4" -> {return (nowTime.toLong()+ LEVEL_FOUR_REPEAT_TIME).toString()}
+			"5" -> {return (nowTime.toLong()+ LEVEL_FIVE_REPEAT_TIME).toString()}
+			"6" -> {return (nowTime.toLong()+ LEVEL_SIX_REPEAT_TIME).toString()}
+			"7" -> {return (nowTime.toLong()+ LEVEL_SEVEN_REPEAT_TIME).toString()}
+			"8" -> {return (nowTime.toLong()+ LEVEL_EIGHT_REPEAT_TIME).toString()}
+			"9" -> {return (nowTime.toLong()+ LEVEL_NINE_REPEAT_TIME).toString()}
+			"10" -> {return (nowTime.toLong()+ LEVEL_TEN_REPEAT_TIME).toString()}
+			else -> {return (nowTime)}
 		}
 	}
 }
