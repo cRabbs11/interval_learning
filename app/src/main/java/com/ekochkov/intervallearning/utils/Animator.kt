@@ -80,6 +80,9 @@ public class Animator {
         set.start()
     }
 
+    /*
+    * Поворот по горизонтали (переворот)
+     */
     fun turnOverHorizontal(view: View, listener: AnimationListener) {
         val reduceX = ObjectAnimator.ofFloat(view, View.SCALE_X, 0.01f)
         val enlargeX = ObjectAnimator.ofFloat(view, View.SCALE_X, 1f)
@@ -133,5 +136,58 @@ public class Animator {
         })
 
         set.start()    
+    }
+
+    fun hideToRightShowFromLeft(view: View, listener: AnimationListener) {
+        val translationToRightX = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 700f)
+
+        val translationFromLeftX = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -700f, 1f)
+
+        val set = AnimatorSet()
+        //set.play(reduceX).with(reduceY)
+        //set.play(enlargeX).with(enlargeY)
+
+        set.play(translationFromLeftX).after(translationToRightX)
+
+        set.duration=400
+
+        translationToRightX.addListener( object: Animator.AnimatorListener {
+            override fun onAnimationRepeat(p0: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                listener.animationOnHalf()
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+
+            }
+
+            override fun onAnimationStart(p0: Animator?) {
+                listener.animationStart()
+            }
+
+        })
+
+        translationFromLeftX.addListener( object: Animator.AnimatorListener{
+            override fun onAnimationRepeat(p0: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                listener.animationEnd()
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+
+            }
+
+            override fun onAnimationStart(p0: Animator?) {
+
+            }
+        })
+
+        set.start()
     }
 }
