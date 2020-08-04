@@ -9,4 +9,19 @@
         android:actionLayout="@layout/search_view"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView"/>
+
+    <item
+        android:id="@+id/menu_options_filter_by_original"
+        android:title="фильтр по оригиналу"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_options_filter_by_translate"
+        android:title="фильтр по переводу"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_options_filter_by_repeat_time"
+        android:title="фильтр по времени"
+        app:showAsAction="never"/>
 </menu>
