@@ -16,6 +16,10 @@ import com.ekochkov.intervallearning.utils.Animator
 
 class RepeatFragment : Fragment(), RepeatContract.View {
 
+    override fun showNextWord(word: String?) {
+        showNextCard(wordLayout, word)
+    }
+
     override fun closeFragment() {
         Log.d(LOG_TAG, "closeFragment")
         activity?.onBackPressed()
@@ -30,7 +34,7 @@ class RepeatFragment : Fragment(), RepeatContract.View {
         negativeButton.visibility=GONE
     }
 
-    override fun showWord(word: String?) {
+    override fun showTranslateWord(word: String?) {
         //wordText.setText(word)
         turnOverWordCard(wordLayout, word)
     }
@@ -66,6 +70,25 @@ class RepeatFragment : Fragment(), RepeatContract.View {
 
         })
 
+    }
+
+    fun showNextCard(view: View, translateWord: String?) {
+        var animator = Animator()
+        animator.hideToRightShowFromLeft(view, object: Animator.AnimationListener {
+            override fun animationStart() {
+
+            }
+
+            override fun animationOnHalf() {
+                Log.d(LOG_TAG, "animationOnHalf")
+                wordText.text=translateWord
+            }
+
+            override fun animationEnd() {
+
+            }
+
+        })
     }
 
 

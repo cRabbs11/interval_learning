@@ -5,9 +5,7 @@ import com.ekochkov.intervallearning.interval.IntervalLearning
 import com.ekochkov.intervallearning.mvp.PresenterBase
 import com.ekochkov.intervallearning.room.RoomController
 import com.ekochkov.intervallearning.room.Word
-import com.ekochkov.intervallearning.utils.DateHelper
 import com.ekochkov.intervallearning.utils.SimpleCallback
-import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
@@ -17,9 +15,9 @@ public class RepeatPresenter(roomController: RoomController):
     override fun onWordClicked(text: String) {
         Log.d(LOG_TAG, "onWordClicked")
         if (text.equals(currentWord.original)) {
-            getView()?.showWord(currentWord.translate)
+            getView()?.showTranslateWord(currentWord.translate)
         } else {
-            getView()?.showWord(currentWord.original)
+            getView()?.showTranslateWord(currentWord.original)
         }
         getView()?.showButtons()
     }
@@ -30,7 +28,7 @@ public class RepeatPresenter(roomController: RoomController):
             override fun onResult(item: Int) {
                 if (wordList.size!=0) {
                     currentWord = wordList.get(0)
-                    getView()?.showWord(currentWord.original)
+                    getView()?.showNextWord(currentWord.original)
                 } else {
                     finish("слова закончились")
                 }
@@ -45,7 +43,7 @@ public class RepeatPresenter(roomController: RoomController):
             override fun onResult(item: Int) {
                 if (wordList.size!=0) {
                     currentWord = wordList.get(0)
-                    getView()?.showWord(currentWord.original)
+                    getView()?.showNextWord(currentWord.original)
                 } else {
                     finish("слова закончились")
                 }

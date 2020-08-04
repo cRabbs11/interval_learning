@@ -7,8 +7,9 @@ import com.ekochkov.intervallearning.room.Word
 public interface RepeatContract {
 
     interface View: MVPView {
-        fun showWord(word: String?)
+        fun showTranslateWord(word: String?)
         fun showFirstWord(word: String?)
+        fun showNextWord(word: String?)
         fun showToast(toast: String)
         fun showButtons()
         fun hideButtons()
