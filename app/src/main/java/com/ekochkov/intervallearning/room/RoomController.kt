@@ -38,12 +38,17 @@ class RoomController(context: Context) {
         this.context=context
     }
 
-    fun getByOriginal(originalWord: String?, callback: RoomAsyncCallback<Word>) {
+    private fun buildWordDatabase(): WordDatabase {
         val db = Room.databaseBuilder(
             context,
             WordDatabase::class.java, "words_db.sqlite")
             .createFromAsset("databases/words_db.sqlite")
             .build()
+        return db
+    }
+
+    fun getByOriginal(originalWord: String?, callback: RoomAsyncCallback<Word>) {
+        val db = buildWordDatabase()
 
         db.wordDao().getByOriginal(originalWord)
             .subscribeOn(Schedulers.io())
@@ -75,11 +80,7 @@ class RoomController(context: Context) {
      */
     public fun getRepeatWords(callback: RoomAsyncCallback<ArrayList<Word>>) {
         val observable = Observable.create<ArrayList<Word>> {
-            val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+            val db = buildWordDatabase()
             var repeatList = arrayListOf<Word>()
             var list = db.wordDao().getAll()
             list.forEach {
@@ -104,11 +105,7 @@ class RoomController(context: Context) {
      */
     fun setCategoryStatus(category: Category, callback: RoomAsyncCallback<Int>) {
         val observable = Observable.create<Int> {
-            val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+            val db = buildWordDatabase()
             var value = 0
             var list = db.wordDao().getAll()
             list.forEach {
@@ -136,11 +133,7 @@ class RoomController(context: Context) {
      */
     fun getCategories(callback: RoomAsyncCallback<ArrayList<Category>>) {
         val observable = Observable.create<ArrayList<Category>> {
-            val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+            val db = buildWordDatabase()
             var categoryList = arrayListOf<Category>()
             var list = db.wordDao().getAll()
             list.forEach {
@@ -168,11 +161,7 @@ class RoomController(context: Context) {
      */
     fun getAllCategories(callback: RoomAsyncCallback<ArrayList<Word>>) {
         val observable = Observable.create<ArrayList<Word>> {
-            val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+            val db = buildWordDatabase()
             var arrayList = arrayListOf<Word>()
             var list = db.wordDao().getAll()
             list.forEach {
@@ -194,11 +183,7 @@ class RoomController(context: Context) {
 	
 	fun getAllWords(callback: RoomAsyncCallback<ArrayList<Word>>) {
         val observable = Observable.create<ArrayList<Word>> {
-            val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+            val db = buildWordDatabase()
             var arrayList = arrayListOf<Word>()
             var list = db.wordDao().getAll()
             list.forEach {
@@ -220,11 +205,7 @@ class RoomController(context: Context) {
 	
 	fun getWordsByCategory(category: String?, callback: RoomAsyncCallback<ArrayList<Word>>) {
         val observable = Observable.create<ArrayList<Word>> {
-            val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+            val db = buildWordDatabase()
             var arrayList = arrayListOf<Word>()
             var list = db.wordDao().getByCategory(category)
             list.forEach {
@@ -246,11 +227,7 @@ class RoomController(context: Context) {
 	
 	fun searchByOriginal(category: String, search: String, callback: RoomAsyncCallback<ArrayList<Word>>) {
 		val observable = Observable.create<ArrayList<Word>> {
-            val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+            val db = buildWordDatabase()
             var arrayList = arrayListOf<Word>()
             //var list = db.wordDao().searchByOriginal(category, search)
             var list = db.wordDao().searchByOriginalOrTranslate(category, search)
@@ -272,11 +249,7 @@ class RoomController(context: Context) {
 	}
 	
 	fun getById(id: Integer?, callback: RoomAsyncCallback<Word>) {
-        val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")               
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+        val db = buildWordDatabase()
 
         db.wordDao().getById(id)
                 .subscribeOn(Schedulers.io())
@@ -318,11 +291,7 @@ class RoomController(context: Context) {
      */
     fun insertWord(wordOriginal: String?, wordTranslate: String?, categoryName: String?, repeatTime: String?, intervalLevel: String?, status: Int?, callback: RoomAsyncCallback<Long>) {
         val observable = Observable.create<Long> {
-            val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+            val db = buildWordDatabase()
 
             var id = getNewId(db.wordDao().getAllGroupById())
             var word = Word(id, wordOriginal, wordTranslate, categoryName, repeatTime, intervalLevel, status)
@@ -345,11 +314,7 @@ class RoomController(context: Context) {
 	* удаление слова из списка
 	*/
     fun deleteWord(id: Int?, callback: RoomAsyncCallback<Int>) {
-        val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+        val db = buildWordDatabase()
         db.wordDao().deleteById(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -375,11 +340,7 @@ class RoomController(context: Context) {
 	
 	fun updateWord(word: Word?, callback: RoomAsyncCallback<Int>) {
         val observable = Observable.create<Int> {
-            val db = Room.databaseBuilder(
-                context,
-                WordDatabase::class.java, "words_db.sqlite")
-                .createFromAsset("databases/words_db.sqlite")
-                .build()
+            val db = buildWordDatabase()
             var value = db.wordDao().update(word)
             db.close()
             it.onNext(value)
