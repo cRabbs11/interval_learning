@@ -17,11 +17,11 @@ import kotlin.collections.ArrayList
 /**
  * Запросы к БД через Room
  */
-class RoomController(context: Context) {
+class RoomController(wordDatabase: WordDatabase) {
 
     val LOG_TAG = RoomController::class.java.getName() + " BMTH "
 
-	var context: Context
+	var db: WordDatabase
 	
 	interface RoomAsyncCallback<T> {
 		fun onSuccess(item: T)
@@ -35,21 +35,10 @@ class RoomController(context: Context) {
     }
 
     init {
-        this.context=context
-    }
-
-    private fun buildWordDatabase(): WordDatabase {
-        val db = Room.databaseBuilder(
-            context,
-            WordDatabase::class.java, "words_db.sqlite")
-            .createFromAsset("databases/words_db.sqlite")
-            .build()
-        return db
+        this.db=wordDatabase
     }
 
     fun getByOriginal(originalWord: String?, callback: RoomAsyncCallback<Word>) {
-        val db = buildWordDatabase()
-
         db.wordDao().getByOriginal(originalWord)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -57,21 +46,16 @@ class RoomController(context: Context) {
                 override fun onSuccess(word: Word) {
                     Log.d(LOG_TAG, "db.wordDao().getAllCoins() onSuccess")
                     callback.onSuccess(word)
-                    db.close()
                 }
 
                 override fun onComplete() {
                     Log.d(LOG_TAG, "db.wordDao().getAllCoins() onComplete")
                     callback.onComplete()
-                    db.close()
-
                 }
 
                 override fun onError(e: Throwable) {
                     Log.d(LOG_TAG, "db.wordDao().getAllCoins() onError: $e")
-                    db.close()
                 }
-
             })
     }
 
@@ -80,7 +64,6 @@ class RoomController(context: Context) {
      */
     public fun getRepeatWords(callback: RoomAsyncCallback<ArrayList<Word>>) {
         val observable = Observable.create<ArrayList<Word>> {
-            val db = buildWordDatabase()
             var repeatList = arrayListOf<Word>()
             var list = db.wordDao().getAll()
             list.forEach {
@@ -88,7 +71,6 @@ class RoomController(context: Context) {
                     repeatList.add(it)
                 }
             }
-            db.close()
             it.onNext(repeatList)
             it.onComplete()
         }
@@ -105,7 +87,6 @@ class RoomController(context: Context) {
      */
     fun setCategoryStatus(category: Category, callback: RoomAsyncCallback<Int>) {
         val observable = Observable.create<Int> {
-            val db = buildWordDatabase()
             var value = 0
             var list = db.wordDao().getAll()
             list.forEach {
@@ -114,7 +95,6 @@ class RoomController(context: Context) {
                 }
                 value = db.wordDao().updateSync(list)
             }
-            db.close()
             it.onNext(value)
             it.onComplete()
         }
@@ -133,7 +113,6 @@ class RoomController(context: Context) {
      */
     fun getCategories(callback: RoomAsyncCallback<ArrayList<Category>>) {
         val observable = Observable.create<ArrayList<Category>> {
-            val db = buildWordDatabase()
             var categoryList = arrayListOf<Category>()
             var list = db.wordDao().getAll()
             list.forEach {
@@ -142,7 +121,6 @@ class RoomController(context: Context) {
                 }
 
             }
-            db.close()
             it.onNext(categoryList)
             it.onComplete()
         }
@@ -161,13 +139,11 @@ class RoomController(context: Context) {
      */
     fun getAllCategories(callback: RoomAsyncCallback<ArrayList<Word>>) {
         val observable = Observable.create<ArrayList<Word>> {
-            val db = buildWordDatabase()
             var arrayList = arrayListOf<Word>()
             var list = db.wordDao().getAll()
             list.forEach {
                 arrayList.add(it)
             }
-            db.close()
             it.onNext(arrayList)
             it.onComplete()
         }
@@ -183,13 +159,11 @@ class RoomController(context: Context) {
 	
 	fun getAllWords(callback: RoomAsyncCallback<ArrayList<Word>>) {
         val observable = Observable.create<ArrayList<Word>> {
-            val db = buildWordDatabase()
             var arrayList = arrayListOf<Word>()
             var list = db.wordDao().getAll()
             list.forEach {
                 arrayList.add(it)
             }
-            db.close()
             it.onNext(arrayList)
             it.onComplete()
         }
@@ -205,13 +179,11 @@ class RoomController(context: Context) {
 	
 	fun getWordsByCategory(category: String?, callback: RoomAsyncCallback<ArrayList<Word>>) {
         val observable = Observable.create<ArrayList<Word>> {
-            val db = buildWordDatabase()
             var arrayList = arrayListOf<Word>()
             var list = db.wordDao().getByCategory(category)
             list.forEach {
                 arrayList.add(it)
             }
-            db.close()
             it.onNext(arrayList)
             it.onComplete()
         }
@@ -227,14 +199,12 @@ class RoomController(context: Context) {
 	
 	fun searchByOriginal(category: String, search: String, callback: RoomAsyncCallback<ArrayList<Word>>) {
 		val observable = Observable.create<ArrayList<Word>> {
-            val db = buildWordDatabase()
             var arrayList = arrayListOf<Word>()
             //var list = db.wordDao().searchByOriginal(category, search)
             var list = db.wordDao().searchByOriginalOrTranslate(category, search)
             list.forEach {
                 arrayList.add(it)
             }
-            db.close()
             it.onNext(arrayList)
             it.onComplete()
         }
@@ -249,25 +219,20 @@ class RoomController(context: Context) {
 	}
 	
 	fun getById(id: Integer?, callback: RoomAsyncCallback<Word>) {
-        val db = buildWordDatabase()
-
         db.wordDao().getById(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object: DisposableMaybeObserver<Word>() {
                     override fun onSuccess(word: Word) {
                         callback.onSuccess(word)
-                        db.close()
                     }
 
                     override fun onComplete() {
                         Log.d(LOG_TAG, "db.wordDao().getAllCoins() onComplete")
-                        db.close()
                     }
 
                     override fun onError(e: Throwable) {
                         Log.d(LOG_TAG, "db.wordDao().getAllCoins() onError: $e")
-                        db.close()
                     }
 
                 })
@@ -291,12 +256,9 @@ class RoomController(context: Context) {
      */
     fun insertWord(wordOriginal: String?, wordTranslate: String?, categoryName: String?, repeatTime: String?, intervalLevel: String?, status: Int?, callback: RoomAsyncCallback<Long>) {
         val observable = Observable.create<Long> {
-            val db = buildWordDatabase()
-
             var id = getNewId(db.wordDao().getAllGroupById())
             var word = Word(id, wordOriginal, wordTranslate, categoryName, repeatTime, intervalLevel, status)
             var long = db.wordDao().insert(word)
-            db.close()
             it.onNext(long)
             it.onComplete()
         }
@@ -314,7 +276,6 @@ class RoomController(context: Context) {
 	* удаление слова из списка
 	*/
     fun deleteWord(id: Int?, callback: RoomAsyncCallback<Int>) {
-        val db = buildWordDatabase()
         db.wordDao().deleteById(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -322,27 +283,22 @@ class RoomController(context: Context) {
                         DisposableMaybeObserver<Int>() {
                     override fun onSuccess(result: Int) {
                         callback.onSuccess(result)
-                        db.close()
                     }
 
                     override fun onComplete() {
                         Log.d(LOG_TAG, "db.wordDao().deleteWord() onComplete")
                         callback.onComplete()
-                        db.close()
                     }
 
                     override fun onError(e: Throwable) {
                         Log.d(LOG_TAG, "db.wordDao().deleteWord() onError: $e")
-                        db.close()
                     }
                 })
     }
 	
 	fun updateWord(word: Word?, callback: RoomAsyncCallback<Int>) {
         val observable = Observable.create<Int> {
-            val db = buildWordDatabase()
             var value = db.wordDao().update(word)
-            db.close()
             it.onNext(value)
             it.onComplete()
         }

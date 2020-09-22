@@ -13,6 +13,7 @@ import android.widget.Button
 import com.ekochkov.intervallearning.R
 import com.ekochkov.intervallearning.room.RoomController
 import android.view.ViewGroup
+import com.ekochkov.intervallearning.room.WordDatabase
 
 
 class AddCategoryDialogFragment(listener: AddWordDialogListener) : DialogFragment(), OnWordItemClickListener<Word>, AddCategoryDialogContract.View {
@@ -104,7 +105,9 @@ class AddCategoryDialogFragment(listener: AddWordDialogListener) : DialogFragmen
             dismiss()
         }
 
-        var roomController = RoomController(context!!)
+        var wordDatabase = WordDatabase.DatabaseProvider.getInstance(context!!)
+        var roomController = RoomController(wordDatabase)
+
         dialogPresenter = AddCategoryDialogPresenter(roomController)
         dialogPresenter.attachView(this)
         dialogPresenter.viewIsReady()

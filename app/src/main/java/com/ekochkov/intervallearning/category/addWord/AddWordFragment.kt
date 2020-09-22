@@ -17,6 +17,7 @@ import android.view.ViewGroup
 
 import android.graphics.Color
 import android.widget.TextView
+import com.ekochkov.intervallearning.room.WordDatabase
 
 
 class AddWordFragment(listener: AddWordDialogListener) : DialogFragment(), OnWordItemClickListener<Word>, AddWordContract.View {
@@ -118,7 +119,8 @@ class AddWordFragment(listener: AddWordDialogListener) : DialogFragment(), OnWor
             dismiss()
         }
 
-        var roomController = RoomController(context!!)
+        var wordDatabase = WordDatabase.DatabaseProvider.getInstance(context!!)
+        var roomController = RoomController(wordDatabase)
         presenter = AddWordPresenter(roomController)
         presenter.attachView(this)
         presenter.viewIsReady()

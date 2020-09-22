@@ -12,6 +12,7 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 import com.ekochkov.intervallearning.R
 import com.ekochkov.intervallearning.room.RoomController
+import com.ekochkov.intervallearning.room.WordDatabase
 import com.ekochkov.intervallearning.utils.Animator
 
 class RepeatFragment : Fragment(), RepeatContract.View {
@@ -125,7 +126,8 @@ class RepeatFragment : Fragment(), RepeatContract.View {
             presenter.onNegativeButtonClicked()
         }
 
-        var roomController = RoomController(context!!)
+        var wordDatabase = WordDatabase.DatabaseProvider.getInstance(context!!)
+        var roomController = RoomController(wordDatabase)
         presenter = RepeatPresenter(roomController)
         presenter.attachView(this)
         presenter.viewIsReady()

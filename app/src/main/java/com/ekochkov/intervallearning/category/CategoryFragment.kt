@@ -24,6 +24,7 @@ import com.ekochkov.intervallearning.category.addWord.AddWordFragment
 import com.ekochkov.intervallearning.room.RoomController.Companion.WORD_LIST_FILTER_BY_ORIGINAL
 import com.ekochkov.intervallearning.room.RoomController.Companion.WORD_LIST_FILTER_BY_REPEAT_TIME
 import com.ekochkov.intervallearning.room.RoomController.Companion.WORD_LIST_FILTER_BY_TRANSLATE
+import com.ekochkov.intervallearning.room.WordDatabase
 import com.ekochkov.intervallearning.utils.OnWordItemClickListener
 import com.ekochkov.intervallearning.utils.QuestionDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -194,7 +195,8 @@ class CategoryFragment : Fragment(), OnWordItemClickListener<Word>, AddWordFragm
             LinearLayoutManager.VERTICAL)
         recyclerView!!.addItemDecoration(dividerItemDecoration)
 
-        var roomController = RoomController(context!!)
+        var wordDatabase = WordDatabase.DatabaseProvider.getInstance(context!!)
+        var roomController = RoomController(wordDatabase)
 
         presenter = CategoryPresenter(roomController)
         presenter.attachView(this)

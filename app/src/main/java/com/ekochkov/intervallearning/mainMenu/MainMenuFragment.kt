@@ -14,13 +14,17 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ekochkov.intervallearning.CategoryListAdapter
-import com.ekochkov.intervallearning.R
+
 import com.ekochkov.intervallearning.interval.IntervalController
 import com.ekochkov.intervallearning.mainMenu.addCategory.AddCategoryDialogFragment
 import com.ekochkov.intervallearning.room.Category
 import com.ekochkov.intervallearning.room.RoomController
 import com.ekochkov.intervallearning.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.lifecycle.ViewModelProviders
+import com.ekochkov.intervallearning.R
+import com.ekochkov.intervallearning.room.RoomModel
+import com.ekochkov.intervallearning.room.WordDatabase
 
 
 class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMenuContract.View,
@@ -124,7 +128,8 @@ class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMe
             LinearLayoutManager.VERTICAL)
         recyclerView!!.addItemDecoration(dividerItemDecoration)
 
-        var roomController = RoomController(context!!)
+        var wordDatabase = WordDatabase.DatabaseProvider.getInstance(context!!)
+        var roomController = RoomController(wordDatabase)
 
         var intervalController = IntervalController.getInstance(activity!!)
 

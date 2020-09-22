@@ -11,6 +11,7 @@ import com.ekochkov.intervallearning.utils.SimpleCallback
 import java.util.concurrent.TimeUnit
 import android.os.Binder
 import com.ekochkov.intervallearning.room.RoomController
+import com.ekochkov.intervallearning.room.WordDatabase
 
 class IntervalService: Service() {
 
@@ -70,7 +71,8 @@ class IntervalService: Service() {
     }
 
     private fun checkWords(context: Context) {
-        var roomController = RoomController(context)
+        var wordDatabase = WordDatabase.DatabaseProvider.getInstance(context!!)
+        var roomController = RoomController(wordDatabase)
         roomController.getRepeatWords(object: RoomController.RoomAsyncCallback<ArrayList<Word>> {
             override fun onSuccess(item: ArrayList<Word>) {
                 if (item.size!=0) {
