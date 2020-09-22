@@ -133,6 +133,8 @@ class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMe
 
         var intervalController = IntervalController.getInstance(activity!!)
 
+        val model = ViewModelProviders.of(this).get(RoomModel::class.java!!)
+
         presenter = MainMenuPresenter(this, roomController, intervalController)
         presenter.attachView(this)
         presenter.viewIsReady()
