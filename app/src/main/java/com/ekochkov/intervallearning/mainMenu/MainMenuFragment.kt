@@ -21,7 +21,7 @@ import com.ekochkov.intervallearning.room.Category
 import com.ekochkov.intervallearning.room.RoomController
 import com.ekochkov.intervallearning.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.lifecycle.ViewModelProviders
+//import androidx.lifecycle.ViewModelProviders
 import com.ekochkov.intervallearning.R
 import com.ekochkov.intervallearning.room.RoomModel
 import com.ekochkov.intervallearning.room.WordDatabase
@@ -133,7 +133,7 @@ class MainMenuFragment : Fragment(), OnViewClickListener<View, Category>, MainMe
 
         var intervalController = IntervalController.getInstance(activity!!)
 
-        val model = ViewModelProviders.of(this).get(RoomModel::class.java!!)
+        //val model = ViewModelProviders.of(this).get(RoomModel::class.java!!)
 
         presenter = MainMenuPresenter(this, roomController, intervalController)
         presenter.attachView(this)
